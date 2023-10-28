@@ -20,7 +20,7 @@ class State():
         return all(self.__current_coverage())
 
     def take_covering_set(self, covering_set: NDArray[bool_]) -> State:
-        new_state_take : tuple[NDArray[bool_]] = (*self.taken, covering_set)
+        new_state_taken : tuple[NDArray[bool_]] = (*self.taken, covering_set)
         return State(
             current_cost = self.current_cost + 1,
             taken = (*self.taken, covering_set),
