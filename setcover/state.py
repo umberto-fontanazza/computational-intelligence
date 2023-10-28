@@ -33,6 +33,10 @@ class State():
     def estimated_total_cost(self) -> int:
         return self.current_cost + self.estimated_additional_cost()
 
+    def fitness(self) -> tuple[int, int] :
+        current_coverage_size = sum(self.__current_coverage)
+        return (current_coverage_size, -self.current_cost)
+
     @staticmethod
     def initial(available_sets: tuple[NDArray[bool_]]):
         return State(current_cost = 0,
