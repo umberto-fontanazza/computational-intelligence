@@ -1,6 +1,6 @@
-from nim import Nim
-from strategy import Strategy
-from move import Move
+from .nim import Nim
+from .strategy import Strategy
+from .move import Move
 
 class Game():
 
