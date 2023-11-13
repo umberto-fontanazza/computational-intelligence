@@ -38,9 +38,10 @@ class State():
 
     def fitness(self, nim_rows = 4):
         # play 10 games against gabriele
+        num_games = 100
         opponent = Strategy.gabriele()
         victories, total_games = 0, 0
-        for play_first, game_number in product([True, False], range(1, 6)):
+        for play_first, game_number in product([True, False], range(1, num_games // 2 + 1)):
             player = self.pick_strategy()
             game = Game(nim_rows, player, opponent, play_first)
             if game.player_wins():

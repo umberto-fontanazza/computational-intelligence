@@ -16,6 +16,7 @@ def main():
             if(child_fit > current_fitness):
                 current_state = child
                 current_fitness = child_fit
+        print(current_fitness)
     print(current_state)
 
 if __name__ == '__main__':
