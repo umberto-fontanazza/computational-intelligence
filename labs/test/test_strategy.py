@@ -1,7 +1,8 @@
-# TODO: write tests
 from src.strategy import Strategy
+from src.game import Game
 
-def test_exeprt_system_vs_gabriele():
-    es = Strategy.expert_system()
-    gabriele = Strategy.gabriele()
-    assert es is not None
+def test_exepert_system_vs_gabriele():
+    player = Strategy.expert_system()
+    opponent = Strategy.gabriele()
+    testgame = Game(4, player, opponent, True)
+    assert testgame.player_wins() == True
