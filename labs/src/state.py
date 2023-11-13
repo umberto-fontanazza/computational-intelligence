@@ -1,10 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from strategy import Strategy
+from .strategy import Strategy
+from .game import Game
 from random import randint
 from numpy.random import choice
 from itertools import product
-from game import Game
 
 available_strategies: list[Strategy] = Strategy.all()
 strategies_count = len(available_strategies)
