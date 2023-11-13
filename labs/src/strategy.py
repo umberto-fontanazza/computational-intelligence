@@ -1,6 +1,6 @@
 from __future__ import annotations
-from move import Move
-from nim import Nim
+from .move import Move
+from .nim import Nim
 from dataclasses import dataclass
 from typing import Callable
 from random import choice, randint

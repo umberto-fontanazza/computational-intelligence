@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Callable
-from move import Move
+from .move import Move
 from functools import reduce
 from operator import xor
 from numpy import array
