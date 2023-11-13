@@ -59,6 +59,9 @@ class Strategy():
     name: str
     move_maker: Callable[[Nim], Move]
 
+    def __str__(self):
+        return self.name
+
     def make_move(self, game_state: Nim) -> Move:
         return self.move_maker(game_state)
 

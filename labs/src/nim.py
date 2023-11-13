@@ -22,7 +22,7 @@ class Nim:
         return not self.game_over()
 
     def __str__(self):
-        return "<" + " ".join(str(_) for _ in self._rows) + ">"
+        return f'<{' '.join(str(row) for row in self._rows)}>\t{'stable' if self.nim_sum() == 0 else 'unstable'}'
 
     @property
     def rows(self) -> tuple:
