@@ -1,6 +1,5 @@
 from src.state import State
 
-
 def main():
     initial_state = State()
     steps = 100
