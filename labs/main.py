@@ -6,6 +6,7 @@ def main():
     steps = 100
 
     current_state, current_fitness = initial_state, initial_state.fitness()
+    print(current_state)
     for _ in range(steps):
         # 1 + 3 evolution strategy
         parent = current_state
@@ -15,6 +16,7 @@ def main():
             if(child_fit > current_fitness):
                 current_state = child
                 current_fitness = child_fit
+    print(current_state)
 
 if __name__ == '__main__':
     main()

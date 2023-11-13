@@ -18,15 +18,15 @@ def uniform_distribution(size: int) -> list[float]:
 
 @dataclass(frozen=True)
 class State():
-    strategy_probability: list[float] = uniform_distribution(strategies_count)
-    strategies: list[Strategy] = available_strategies
+    strategy_probability: tuple[float, ...] = tuple(uniform_distribution(strategies_count))
+    strategies: tuple[Strategy, ...] = tuple(available_strategies)
 
     def mutate(self) -> State:
         mutating_index = randint(0, strategies_count - 1)
-        sigma = 0.2 # TODO: make it random distribution
+        sigma = 0.5 # TODO: make it random distribution
         child_probabilities = [x + sigma if i == mutating_index else x for i,x in enumerate(self.strategy_probability)]
         child_probabilities = normalized(child_probabilities)
-        return State(child_probabilities, self.strategies)
+        return State(tuple(child_probabilities), self.strategies)
 
     def pick_strategy(self) -> Strategy:
         strategy_index = choice(strategies_count, p = self.strategy_probability)
@@ -47,3 +47,9 @@ class State():
                 victories += 1
             total_games += 1
         return victories / total_games
+
+    def __str__(self) -> str:
+        ret = '\n'
+        for i, strat in enumerate(self.strategies):
+            ret = ret + f'{strat.name}   {self.strategy_probability[i]:.2f}\n'
+        return ret
