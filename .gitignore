@@ -2,3 +2,4 @@ computational-intelligence/
 computational-intelligence-contributions/
 **/__pycache__/
 **/.mypy_cache/
+**/.pytest_cache
