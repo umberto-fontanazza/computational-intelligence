@@ -39,6 +39,10 @@ def expert_system(state: Nim) -> Move:
     current_nim_sum = state.nim_sum()
     stable_state = current_nim_sum == 0
     remaining_rows = [row for row in state.rows if row > 0]
+    if len(remaining_rows) == 1:
+        row_size = max(state.rows)
+        row_index = state.rows.index(row_size)
+        return Move(row_index, row_size - 1)
     if len(remaining_rows) == 2 and 1 in state.rows:
         largest_row = max(state.rows)
         largest_row_index = state.rows.index(largest_row)
