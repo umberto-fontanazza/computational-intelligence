@@ -9,13 +9,14 @@ def main():
     for _ in range(steps):
         # 1 + 3 evolution strategy
         parent = current_state
-        for i in range(3):
+        μ, λ = 1, 3
+        for i in range(λ):
             child = parent.mutate()
             child_fit = child.fitness()
             if(child_fit > current_fitness):
                 current_state = child
                 current_fitness = child_fit
-        print(current_fitness)
+        print(f'Fit: {current_fitness}')
     print(current_state)
 
 if __name__ == '__main__':
