@@ -54,8 +54,11 @@ def expert_system(state: Nim) -> Move:
         return Move(longest_row_index, 1)
     # leave a stable state to the opponent
     for index, row in enumerate(state.rows):
-        if row & current_nim_sum ^ current_nim_sum == 0:
-            return Move(index, current_nim_sum)
+        ply = row - (row ^ current_nim_sum)
+        if 0 < ply and ply <= row:
+            return Move(index, ply)
+        #if row & current_nim_sum ^ current_nim_sum == 0:
+        #    return Move(index, current_nim_sum)
     raise ValueError('Move not found')
 
 @dataclass(frozen=True)

@@ -27,3 +27,51 @@ def test_expert_system_vs_gabriele_100():
             total_victories += 1
     assert total_played_games == games_number
     assert total_victories >= 50
+
+# TODO: test the expert systems against the following configurations
+""" <1 3 5 1>       unstable
+<0 0 4 2>       unstable
+<1 3 5 0>       unstable
+<0 1 4 6>       unstable
+<0 0 3 5>       unstable
+<1 0 5 3>       unstable
+<0 3 4 2>       unstable
+<0 2 4 1>       unstable
+<0 0 3 4>       unstable
+<1 3 5 0>       unstable
+<1 3 5 0>       unstable
+<1 3 5 0>       unstable
+<1 3 5 0>       unstable
+<0 1 4 6>       unstable
+<1 3 5 1>       unstable
+<0 2 3 6>       unstable
+<1 3 5 1>       unstable
+<1 1 3 5>       unstable
+<1 3 5 1>       unstable
+<1 3 5 1>       unstable
+<0 1 3 5>       unstable
+<1 3 5 1>       unstable
+<1 1 5 3>       unstable
+<1 0 2 4>       unstable
+<1 0 2 4>       unstable
+<1 1 2 5>       unstable
+<1 3 1 6>       unstable
+<1 0 2 4>       unstable
+<1 3 3 6>       unstable
+<1 0 3 4>       unstable
+<1 3 1 6>       unstable
+<1 3 1 6>       unstable
+<1 3 3 6>       unstable
+<1 1 5 6>       unstable
+<1 3 5 1>       unstable
+<1 0 5 2>       unstable
+<1 3 5 0>       unstable
+<1 3 5 1>       unstable
+<0 0 2 4>       unstable
+<1 3 1 6>       unstable
+<1 3 5 0>       unstable
+<1 3 5 1>       unstable
+<1 1 5 6>       unstable
+<1 3 5 1>       unstable
+<1 3 3 6>       unstable
+<1 3 5 0>       unstable """

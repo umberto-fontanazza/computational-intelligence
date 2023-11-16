@@ -1,4 +1,19 @@
 from src.state import State
+from src.strategy import Strategy
+from src.game import Game
+from itertools import product
+
+def confront_strategies(player: Strategy, opponent: Strategy, games_number = 100):
+    wins = 0
+    for player_starts, _ in product([False, True], range(games_number // 2)):
+        game = Game(4, player, opponent, player_starts)
+        try:
+            if game.player_wins():
+                wins += 1
+        except ValueError:
+            pass
+    losses = games_number - wins
+    print(f'{player}: {wins},  {opponent}: {losses}')
 
 def main():
     initial_state = State()
@@ -20,4 +35,5 @@ def main():
     print(current_state)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    confront_strategies(Strategy.expert_system(), Strategy.optimal())
