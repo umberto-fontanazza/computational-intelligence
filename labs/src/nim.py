@@ -31,6 +31,7 @@ class Nim:
     def nimming(self, ply: Move) -> None:
         row, num_objects = ply.row, ply.quantity
         assert self._rows[row] >= num_objects
+        assert ply.quantity > 0
         assert self._k is None or num_objects <= self._k
         self._rows[row] -= num_objects
 
