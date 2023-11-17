@@ -1,5 +1,7 @@
 from src.strategy import Strategy
 from src.game import Game
+from src.nim import Nim
+from src.nim import Move
 from itertools import product
 
 def test_gabriele_vs_expert_system():
@@ -28,50 +30,27 @@ def test_expert_system_vs_gabriele_100():
     assert total_played_games == games_number
     assert total_victories >= 50
 
-# TODO: test the expert systems against the following configurations
-""" <1 3 5 1>       unstable
-<0 0 4 2>       unstable
-<1 3 5 0>       unstable
-<0 1 4 6>       unstable
-<0 0 3 5>       unstable
-<1 0 5 3>       unstable
-<0 3 4 2>       unstable
-<0 2 4 1>       unstable
-<0 0 3 4>       unstable
-<1 3 5 0>       unstable
-<1 3 5 0>       unstable
-<1 3 5 0>       unstable
-<1 3 5 0>       unstable
-<0 1 4 6>       unstable
-<1 3 5 1>       unstable
-<0 2 3 6>       unstable
-<1 3 5 1>       unstable
-<1 1 3 5>       unstable
-<1 3 5 1>       unstable
-<1 3 5 1>       unstable
-<0 1 3 5>       unstable
-<1 3 5 1>       unstable
-<1 1 5 3>       unstable
-<1 0 2 4>       unstable
-<1 0 2 4>       unstable
-<1 1 2 5>       unstable
-<1 3 1 6>       unstable
-<1 0 2 4>       unstable
-<1 3 3 6>       unstable
-<1 0 3 4>       unstable
-<1 3 1 6>       unstable
-<1 3 1 6>       unstable
-<1 3 3 6>       unstable
-<1 1 5 6>       unstable
-<1 3 5 1>       unstable
-<1 0 5 2>       unstable
-<1 3 5 0>       unstable
-<1 3 5 1>       unstable
-<0 0 2 4>       unstable
-<1 3 1 6>       unstable
-<1 3 5 0>       unstable
-<1 3 5 1>       unstable
-<1 1 5 6>       unstable
-<1 3 5 1>       unstable
-<1 3 3 6>       unstable
-<1 3 5 0>       unstable """
+def test_expert_system_several():
+    expert_system = Strategy.expert_system()
+    best_moves = (
+        ([1, 3, 5, 1], Move(2, 2)),
+        ([0, 0, 4, 2], Move(2, 2)),
+        ([1, 3, 3, 6], Move(3, 5)),
+        ([1, 3, 1, 6], Move(3, 3))
+    )
+
+    for state, best_move in best_moves:
+        nim = Nim.from_rows(state)
+        es_move = expert_system.make_move(nim)
+        assert es_move == best_move
+
+def test_expert_system_limit_case():
+    expert_system = Strategy.expert_system()
+    best_moves = [
+        (Nim.from_rows([0, 1, 1, 2]), Move(3, 1)),
+        (Nim.from_rows([1, 1, 1, 2]), Move(3, 2))
+    ]
+
+    for nim, best_move in best_moves:
+        es_move = expert_system.make_move(nim)
+        assert es_move == best_move

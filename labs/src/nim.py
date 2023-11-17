@@ -14,6 +14,13 @@ def nim_sum_original(game_state: Nim) -> int:
     return int("".join(str(_) for _ in xor), base=2)
 
 class Nim:
+    @staticmethod
+    def from_rows(rows: list[int]):
+        num_rows = len(rows)
+        nim = Nim(num_rows)
+        nim._rows = [row for row in rows]
+        return nim
+
     def __init__(self, num_rows: int, k: int | None = None) -> None:
         self._rows = [i * 2 + 1 for i in range(num_rows)]
         self._k = k
