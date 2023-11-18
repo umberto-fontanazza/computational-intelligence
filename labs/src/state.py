@@ -37,7 +37,6 @@ class State():
         raise NotImplementedError()
 
     def fitness(self, nim_rows = 4):
-        # play 10 games against gabriele
         num_games = 100
         opponent = Strategy.gabriele()
         victories, total_games = 0, 0
