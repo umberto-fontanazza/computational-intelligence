@@ -39,15 +39,16 @@ def expert_system(state: Nim) -> Move:
     current_nim_sum = state.nim_sum()
     stable_state = current_nim_sum == 0
     remaining_rows = [row for row in state.rows if row > 0]
+    unitary_rows_count = state.rows.count(1)
     if len(remaining_rows) == 1:
         row_size = max(state.rows)
         row_index = state.rows.index(row_size)
         ply = row_size - 1
         return Move(row_index, ply if ply > 0 else 1)
-    if len(remaining_rows) == 2 and 1 in state.rows:
-        largest_row = max(state.rows)
-        largest_row_index = state.rows.index(largest_row)
-        return Move(largest_row_index, largest_row)
+    if len(remaining_rows) - unitary_rows_count == 1:
+        long_row_size = max(remaining_rows)
+        long_row_index = state.rows.index(long_row_size)
+        return Move(long_row_index, long_row_size - ((unitary_rows_count + 1) % 2))
     if stable_state:
         # you cannot leave a stable state, make a minimal move
         longest_row = max(state.rows)
@@ -58,8 +59,6 @@ def expert_system(state: Nim) -> Move:
         ply = row - (row ^ current_nim_sum)
         if 0 < ply and ply <= row:
             return Move(index, ply)
-        #if row & current_nim_sum ^ current_nim_sum == 0:
-        #    return Move(index, current_nim_sum)
     raise ValueError('Move not found')
 
 @dataclass(frozen=True)
