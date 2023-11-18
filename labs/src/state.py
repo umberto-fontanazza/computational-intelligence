@@ -51,5 +51,5 @@ class State():
     def __str__(self) -> str:
         ret = '\n'
         for i, strat in enumerate(self.strategies):
-            ret = ret + f'{strat.name}   {self.strategy_probability[i]:.2f}\n'
+            ret = ret + f'{strat.name:<16}   {self.strategy_probability[i]:.2f}\n'
         return ret
