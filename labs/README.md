@@ -1,7 +1,7 @@
 The goal of the lab is to develop an evolutionary strategy able to identify the best strategy among a range of possible strategies to play Nim.
 In this case the strategy is intended as a criterion for making a move. The state of the problem therefore is not the state of the Nim game, instead it is an array of probabilities associated with the various strategies and the initial state is a uniform distribution of probability to use each of the strategies.
 
-The fitness function therefore arranges a certain amount of matches and evaluates win and losses using for each mach a strategy extracted from the pool of strategies with the probability of extraction given by the state.
+The fitness function therefore arranges a certain amount of matches and evaluates win and losses using for each match a strategy extracted from the pool of strategies with the probability of extraction given by the state.
 
 
 ## How expert systems calculates ply to leave nim sum == 0
