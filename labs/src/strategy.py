@@ -36,15 +36,15 @@ def gabriele(game_state: Nim) -> Move:
     return Move(*max(possible_moves, key=lambda m: (-m[0], m[1])))
 
 def expert_system(state: Nim) -> Move:
-    current_nim_sum = state.nim_sum()
-    stable_state = current_nim_sum == 0
+    nim_sum = state.nim_sum()
+    stable_state = nim_sum == 0
     remaining_rows = [row for row in state.rows if row > 0]
     unitary_rows_count = state.rows.count(1)
     if len(remaining_rows) == 1:
         row_size = max(state.rows)
         row_index = state.rows.index(row_size)
-        ply = row_size - 1
-        return Move(row_index, ply if ply > 0 else 1)
+        ply = row_size - 1 or 1
+        return Move(row_index, ply)
     if len(remaining_rows) - unitary_rows_count == 1:
         long_row_size = max(remaining_rows)
         long_row_index = state.rows.index(long_row_size)
@@ -56,7 +56,7 @@ def expert_system(state: Nim) -> Move:
         return Move(longest_row_index, 1)
     # leave a stable state to the opponent
     for index, row in enumerate(state.rows):
-        ply = row - (row ^ current_nim_sum)
+        ply = row - (row ^ nim_sum)
         if 0 < ply and ply <= row:
             return Move(index, ply)
     raise ValueError('Move not found')
