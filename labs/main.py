@@ -1,6 +1,7 @@
 from src.state import State
 from src.strategy import Strategy
 from src.game import Game
+from src.generation import Generation
 from itertools import product
 
 def confront_strategies(player: Strategy, opponent: Strategy, games_number = 100):
@@ -15,7 +16,7 @@ def confront_strategies(player: Strategy, opponent: Strategy, games_number = 100
     losses = games_number - wins
     print(f'{player}: {wins},  {opponent}: {losses}')
 
-def main():
+def one_plus_three():
     initial_state = State()
     steps = 100
 
@@ -34,6 +35,20 @@ def main():
         print(f'Fit: {current_fitness}')
     print(current_state)
 
+def evolution_strategy():
+    initial_generation = Generation()
+    total_generations = 20
+
+    current_generation = initial_generation
+    for i, _ in enumerate(range(total_generations)):
+        current_generation = current_generation.next()
+        fittest = current_generation.fittest_individual()
+        print(f'=== Generation {i} ===')
+        print(f'Fittest individual (fitness = {fittest.fitness()}):')
+        print(current_generation.fittest_individual())
+        print()
+
 if __name__ == '__main__':
-    # main()
-    confront_strategies(Strategy.expert_system(), Strategy.optimal())
+    # one_plus_three()
+    # confront_strategies(Strategy.expert_system(), Strategy.optimal())
+    evolution_strategy()
