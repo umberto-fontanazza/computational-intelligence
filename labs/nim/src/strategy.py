@@ -40,7 +40,7 @@ def expert_system(state: Nim) -> Move:
     stable_state = nim_sum == 0
     remaining_rows = [row for row in state.rows if row > 0]
     unitary_rows_count = state.rows.count(1)
-    if len(remaining_rows) - unitary_rows_count == 0:
+    if len(remaining_rows) == unitary_rows_count:
         # all rows are of len 1, obliged move
         return Move(state.rows.index(1), 1)
     if len(remaining_rows) - unitary_rows_count == 1:
