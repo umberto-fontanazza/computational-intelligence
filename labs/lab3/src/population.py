@@ -3,6 +3,7 @@ from typing import Callable
 from dataclasses import dataclass
 from src.genome import Genome
 from random import choices
+from functools import cache
 
 '''Selects from the population a number of {selected_count} individuals'''
 def tournament_selection(population: list[Genome], selected_count: int, tournament_size = 2) -> list[Genome]:
@@ -30,6 +31,8 @@ class Population:
         selection_pool: list[Genome] = sorted([*self.genomes, *optimized_children], key= lambda genome: genome.fitness, reverse=True)
         return Population(selection_pool[0: population_size])
 
+    @property
+    @cache
     def best_genome(self) -> Genome:
         return max(self.genomes, key = lambda genome: genome.fitness)
 
