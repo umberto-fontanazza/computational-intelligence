@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Callable
 from dataclasses import dataclass
 from src.genome import Genome
 from random import choices
@@ -31,3 +32,11 @@ class Population:
 
     def best_genome(self) -> Genome:
         return max(self.genomes, key = lambda genome: genome.fitness)
+
+    '''The initial population is not made of random genomes but of genomes locally optimized,
+    where locally optimized means they are the result of an hill climber'''
+    @staticmethod
+    def initial(genome_size: int, fitness_fn: Callable[[list[int]], float], population_size = 30) -> Population:
+        population = [Genome.random(genome_size, fitness_fn) for _ in range(population_size)]
+        climbers = [genome.climb_hill() for genome in population]
+        return Population(climbers)
