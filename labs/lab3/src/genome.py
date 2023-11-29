@@ -43,6 +43,24 @@ class Genome():
         child_genome = tuple((gene ^ 1) if mutations_mask[i] else gene for i, gene in enumerate(self.genes))
         return Genome(child_genome, self.fitness_fn)
 
+    '''Optimizes local optimum, + strategy hill climber.
+    λ is the number of children, μ = 1'''
+    def climb_hill(self, max_steps = 100, max_non_improving_steps = 5, λ = 3) -> Genome:
+        previous_fittest = None
+        fittest: Genome = self
+        non_improving_steps = 0
+        for _ in range(max_steps):
+            children = [self.mutate2() for _ in range(λ)]
+            previous_fittest = fittest
+            fittest = max([fittest, *children], key = lambda genome: genome.fitness)
+            if fittest.fitness == previous_fittest.fitness:
+                non_improving_steps += 1
+            else:
+                non_improving_steps = 0
+            if non_improving_steps == max_non_improving_steps:
+                break
+        return fittest
+
     def __str__(self) -> str:
         return ''.join([str(gene) for gene in self.genes])
 
