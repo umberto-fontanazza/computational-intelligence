@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Callable, Literal
 from dataclasses import dataclass
-from random import choice, choices, randint
+from random import choice, choices, randint, shuffle
 from functools import cache
 
 @dataclass(frozen=True)
@@ -31,6 +31,17 @@ class Genome():
         changing_index = randint(0, length - 1)
         child_genes = tuple(gene ^ 1 if i == changing_index else gene for i, gene in enumerate(self.genes))
         return Genome(child_genes, self.fitness_fn)
+
+    '''Exploit solvability of the problem, we know max fitness is 1 and minimum fitness is 0
+    Mutate a quantity of genes(loci) proportional to the distance from perfect fitness'''
+    def mutate2(self) -> Genome:
+        best_fitness_distance = 1 - self.fitness
+        genome_length = len(self.genes)
+        mutations_count = round(genome_length * best_fitness_distance)
+        mutations_mask = [True if i < mutations_count else False for i in range(genome_length)]
+        shuffle(mutations_mask)
+        child_genome = tuple((gene ^ 1) if mutations_mask[i] else gene for i, gene in enumerate(self.genes))
+        return Genome(child_genome, self.fitness_fn)
 
     def __str__(self) -> str:
         return ''.join([str(gene) for gene in self.genes])
