@@ -28,11 +28,11 @@ class Population:
         population_size = len(self.genomes)
         children = self.recombination(20)
         optimized_children = [child.climb_hill() for child in children]
-        selection_pool: list[Genome] = sorted([*self.genomes, *optimized_children], key= lambda genome: genome.fitness, reverse=True)
+        selection_pool: list[Genome] = sorted(self.genomes + optimized_children, key= lambda genome: genome.fitness, reverse=True) # [*self.genomes, *optimized_children]
         return Population(selection_pool[0: population_size])
 
     @property
-    @cache
+    # @cache TODO: in order to use population must be hashable
     def best_genome(self) -> Genome:
         return max(self.genomes, key = lambda genome: genome.fitness)
 
