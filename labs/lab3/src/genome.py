@@ -67,4 +67,14 @@ class Genome():
     @property
     @cache
     def fitness(self) -> float:
-        return self.fitness_fn([x for x in self.genes])
+        genes_list: list[int] = [x for x in self.genes]
+        return self.fitness_fn(genes_list)
+
+    def distance(self, other: Genome) -> float:
+        if len(self.genes) != len(other.genes):
+            raise ValueError('Cannot evaluate distance between genomes of different length')
+        differences = 0
+        for i in range(len(self.genes)):
+            if self.genes[i] != other.genes[i]:
+                differences += 1
+        return differences / len(self.genes)
