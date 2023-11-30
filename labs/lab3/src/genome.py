@@ -37,7 +37,7 @@ class Genome():
     def mutate2(self) -> Genome:
         best_fitness_distance = 1 - self.fitness
         genome_length = len(self.genes)
-        mutations_count = round(genome_length * best_fitness_distance)
+        mutations_count = round(genome_length * best_fitness_distance) or 1
         mutations_mask = [True if i < mutations_count else False for i in range(genome_length)]
         shuffle(mutations_mask)
         child_genome = tuple((gene ^ 1) if mutations_mask[i] else gene for i, gene in enumerate(self.genes))
