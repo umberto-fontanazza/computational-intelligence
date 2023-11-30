@@ -21,6 +21,7 @@ class Population:
         parent_count = children_count * 2 # two parent x-over
         parents = tournament_selection(self.genomes, selected_count = parent_count)
         couples = [tuple(parents[i:(i + 2)]) for i in range(children_count)]
+        couples = [couple for couple in couples if couple[0]!=couple[1]] # recombining element with itself makes no sense
         children = [couple[0].combine(couple[1]) for couple in couples]
         return children
 
