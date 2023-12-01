@@ -25,11 +25,26 @@ class Population:
         children = [couple[0].combine(couple[1]) for couple in couples]
         return children
 
+    def recombination2(self, children_count: int) -> list[Genome]:
+        max_attempts = 50
+        children: list[Genome] = []
+        while len(children) < children_count:
+            parents = tournament_selection(self.genomes, selected_count = 2)
+            if parents[0] == parents[1]:
+                continue
+            children.append(parents[0].combine(parents[1]))
+            max_attempts -= 1
+            if max_attempts == 0:
+                raise ValueError('Finding two different elements to recombine takes too long')
+        return children
+
     def next_generation(self) -> Population:
         population_size = len(self.genomes)
-        children = self.recombination(20)
-        optimized_children = [child.climb_hill() for child in children]
-        selection_pool: list[Genome] = sorted(self.genomes + optimized_children, key= lambda genome: genome.fitness, reverse=True) # [*self.genomes, *optimized_children]
+        genome_params = len(self.best_genome.genes), self.best_genome.fitness_fn
+        children = [child.climb_hill() for child in self.recombination2(20)]
+        new_genomes = [Genome.random(*genome_params).climb_hill() for _ in range(4)]
+        unique_genes = set(self.genomes + children + new_genomes)
+        selection_pool: list[Genome] = sorted([x for x in unique_genes], key= lambda genome: genome.fitness, reverse=True) # [*self.genomes, *optimized_children]
         return Population(selection_pool[0: population_size])
 
     @property
