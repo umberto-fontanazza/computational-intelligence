@@ -13,18 +13,39 @@ class Genome():
     def random(length: int, fitness_fn: Callable[[list[int]], float]) -> Genome:
         return Genome(tuple(gene for gene in choices([0, 1], k = length)), fitness_fn)
 
-    # TODO: add two cuts
-    def combine(self, other: Genome, strategy: Literal['mix', 'one cut'] = 'mix') -> Genome:
+    def combine_masked(self, other: Genome, mask: list[bool]) -> Genome:
+        child_genome = [gene if mask[i] else other.genes[i] for i, gene in enumerate(self.genes)]
+        return Genome(tuple(child_genome), self.fitness_fn)
+
+    def combine(self, other: Genome, strategy: Literal['mix', 'one cut', 'two cuts'] = 'mix') -> Genome:
         length = len(self.genes)
         if strategy not in ['mix', 'one cut']:
             raise ValueError(f'Strategy {strategy} not valid')
         if strategy == 'mix':
             child_genes = tuple(choice([self.genes[i], other.genes[i]]) for i in range(length))
             return Genome(child_genes, self.fitness_fn)
-        if strategy == 'one cut':
+        if strategy == 'one cut': # deprecated, close genes are changed toghether
             cut_index = randint(1, length - 1)
             child_genes = self.genes[:cut_index] + other.genes[cut_index:length]
             return Genome(child_genes, self.fitness_fn)
+        if strategy == 'two cuts': # deprecated, close genes are changed toghether
+            if len(self.genes) < 3:
+                raise ValueError('Genome too short, two cuts not applicable')
+            cut_index_one = cut_index_two = randint(1, length - 1)
+            while cut_index_two == cut_index_one:
+                cut_index_two = randint(1, length - 1)
+            if cut_index_two < cut_index_one:
+                cut_index_one, cut_index_two = cut_index_two, cut_index_one
+            child_genes = self.genes[:cut_index_one] + other.genes[cut_index_one:cut_index_two] + self.genes[cut_index_two:]
+            return Genome(tuple(child_genes), self.fitness_fn)
+
+    '''The idea is to associate a fitness value to a group of genes (chromosome), even though we can evaluate fitenss
+    of complete genomes only. The chromosome is identified in the genome with a mask (like subnet masks for ip networks).
+    To compute the fitness relative to a chromosome.
+    Likely requires one extra fitness call'''
+    def chromosome_fitness_gain(self, mask: list[bool], reference_random_genome: Genome) -> float:
+        random_with_chromosome = self.combine_masked(reference_random_genome, mask)
+        return random_with_chromosome.fitness - reference_random_genome.fitness
 
     def mutate(self) -> Genome:
         length = len(self.genes)
@@ -70,11 +91,18 @@ class Genome():
         genes_list: list[int] = [x for x in self.genes]
         return self.fitness_fn(genes_list)
 
-    def distance(self, other: Genome) -> float:
+    '''method = 'absolute' returns int number of different genes, method = 'relative' returns float ratio
+    (absolute distance / genome length)'''
+    def distance(self, other: Genome, method: Literal['relative', 'absolute'] = 'relative') -> float | int:
         if len(self.genes) != len(other.genes):
             raise ValueError('Cannot evaluate distance between genomes of different length')
         differences = 0
         for i in range(len(self.genes)):
             if self.genes[i] != other.genes[i]:
                 differences += 1
-        return differences / len(self.genes)
+            # benchmark against
+            # differences += self.genes[i] ^ other.genes[i]
+        if method == 'absolute':
+            return differences
+        elif method == 'relative':
+            return differences / len(self.genes)
