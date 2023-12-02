@@ -15,7 +15,7 @@ def tournament_selection(population: list[Genome], selected_count: int, tourname
 @dataclass
 class Population:
     genomes: list[Genome]
-    reference_random_genome: Genome | None = None
+    reference_random_genome: Genome
 
     '''Tournament selection of size 2 determines parents, which are coupled and combined'''
     def recombination(self, children_count: int) -> list[Genome]:
