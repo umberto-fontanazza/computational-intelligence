@@ -15,6 +15,7 @@ def tournament_selection(population: list[Genome], selected_count: int, tourname
 @dataclass
 class Population:
     genomes: list[Genome]
+    reference_random_genome: Genome | None = None
 
     '''Tournament selection of size 2 determines parents, which are coupled and combined'''
     def recombination(self, children_count: int) -> list[Genome]:
@@ -45,7 +46,7 @@ class Population:
         new_genomes = [Genome.random(*genome_params).climb_hill() for _ in range(4)]
         unique_genes = set(self.genomes + children + new_genomes)
         selection_pool: list[Genome] = sorted([x for x in unique_genes], key= lambda genome: genome.fitness, reverse=True) # [*self.genomes, *optimized_children]
-        return Population(selection_pool[0: population_size])
+        return Population(selection_pool[0: population_size], reference_random_genome = self.reference_random_genome)
 
     @property
     # @cache TODO: in order to use population must be hashable
@@ -57,5 +58,8 @@ class Population:
     @staticmethod
     def initial(genome_size: int, fitness_fn: Callable[[list[int]], float], population_size = 30) -> Population:
         population = [Genome.random(genome_size, fitness_fn) for _ in range(population_size)]
+        fitness_expectation = sum([genome.fitness for genome in population]) / len(population)
+        distance_from_mean_extractor = lambda genome: abs(genome.fitness - fitness_expectation)
+        reference_random_genome = min(population, key = distance_from_mean_extractor)
         climbers = [genome.climb_hill() for genome in population]
-        return Population(climbers)
+        return Population(climbers, reference_random_genome = reference_random_genome)
