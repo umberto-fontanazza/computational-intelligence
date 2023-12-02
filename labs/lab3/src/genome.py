@@ -83,7 +83,7 @@ class Genome():
         return fittest
 
     def __str__(self) -> str:
-        return ''.join([str(gene) for gene in self.genes])
+        return f"{''.join([str(gene) for gene in self.genes])}, fitness: {self.fitness:3.2%}"
 
     @property
     @cache
