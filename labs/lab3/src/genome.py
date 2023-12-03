@@ -44,15 +44,6 @@ class Genome():
             child_genes = self.genes[:cut_index_one] + other.genes[cut_index_one:cut_index_two] + self.genes[cut_index_two:]
             return Genome(tuple(child_genes), self.fitness_fn)
 
-    # def chromosome_fitness_gain(self, mask: list[bool], reference_random_genome: Genome) -> float:
-        # """The idea is to associate a fitness value to a group of genes (chromosome), even though we can evaluate fitenss
-        # of complete genomes only. The chromosome is identified in the genome with a mask (like subnet masks for ip networks).
-        # To compute the fitness relative to a chromosome.
-        # Likely requires one extra fitness call"""
-
-        # random_with_chromosome = self.combine_masked(reference_random_genome, mask)
-        # return random_with_chromosome.fitness - reference_random_genome.fitness
-
     def chromosome_fitness_gain(self, mask: Mask, random_genomes: list[Genome]) -> float:
         """Measure the gain of applying the chromosome identified by the mask to a pool of random genomes"""
 
