@@ -47,6 +47,13 @@ class Genome():
         random_with_chromosome = self.combine_masked(reference_random_genome, mask)
         return random_with_chromosome.fitness - reference_random_genome.fitness
 
+    def chromosome_fitness_gain2(self, mask: list[bool], random_genomes: list[Genome]) -> float:
+        """Measure the gain of applying the chromosome identified by the mask to a pool of random genomes"""
+        previous_average_fitness = sum([genome.fitness for genome in random_genomes]) / len(random_genomes)
+        random_with_chromosome = [self.combine_masked(other, mask) for other in random_genomes]
+        updated_average_fitness = sum([genome.fitness for genome in random_with_chromosome]) / len(random_with_chromosome)
+        return updated_average_fitness - previous_average_fitness
+
     def mutate(self) -> Genome:
         length = len(self.genes)
         changing_index = randint(0, length - 1)
