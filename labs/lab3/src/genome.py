@@ -39,16 +39,18 @@ class Genome():
             child_genes = self.genes[:cut_index_one] + other.genes[cut_index_one:cut_index_two] + self.genes[cut_index_two:]
             return Genome(tuple(child_genes), self.fitness_fn)
 
-    '''The idea is to associate a fitness value to a group of genes (chromosome), even though we can evaluate fitenss
-    of complete genomes only. The chromosome is identified in the genome with a mask (like subnet masks for ip networks).
-    To compute the fitness relative to a chromosome.
-    Likely requires one extra fitness call'''
     def chromosome_fitness_gain(self, mask: list[bool], reference_random_genome: Genome) -> float:
+        """The idea is to associate a fitness value to a group of genes (chromosome), even though we can evaluate fitenss
+        of complete genomes only. The chromosome is identified in the genome with a mask (like subnet masks for ip networks).
+        To compute the fitness relative to a chromosome.
+        Likely requires one extra fitness call"""
+
         random_with_chromosome = self.combine_masked(reference_random_genome, mask)
         return random_with_chromosome.fitness - reference_random_genome.fitness
 
     def chromosome_fitness_gain2(self, mask: list[bool], random_genomes: list[Genome]) -> float:
         """Measure the gain of applying the chromosome identified by the mask to a pool of random genomes"""
+
         previous_average_fitness = sum([genome.fitness for genome in random_genomes]) / len(random_genomes)
         random_with_chromosome = [self.combine_masked(other, mask) for other in random_genomes]
         updated_average_fitness = sum([genome.fitness for genome in random_with_chromosome]) / len(random_with_chromosome)
@@ -60,9 +62,10 @@ class Genome():
         child_genes = tuple(gene ^ 1 if i == changing_index else gene for i, gene in enumerate(self.genes))
         return Genome(child_genes, self.fitness_fn)
 
-    '''Exploit solvability of the problem, we know max fitness is 1 and minimum fitness is 0
-    Mutate a quantity of genes(loci) proportional to the distance from perfect fitness'''
     def mutate2(self) -> Genome:
+        """Exploit solvability of the problem, we know max fitness is 1 and minimum fitness is 0
+        Mutate a quantity of genes(loci) proportional to the distance from perfect fitness"""
+
         best_fitness_distance = 1 - self.fitness
         genome_length = len(self.genes)
         mutations_count = round(genome_length * best_fitness_distance) or 1
@@ -71,9 +74,10 @@ class Genome():
         child_genome = tuple((gene ^ 1) if mutations_mask[i] else gene for i, gene in enumerate(self.genes))
         return Genome(child_genome, self.fitness_fn)
 
-    '''Optimizes local optimum, + strategy hill climber.
-    λ is the number of children, μ = 1'''
     def climb_hill(self, max_steps = 100, max_non_improving_steps = 5, λ = 3) -> Genome:
+        """Optimizes local optimum, + strategy hill climber.
+        λ is the number of children, μ = 1"""
+
         previous_fittest = None
         fittest: Genome = self
         non_improving_steps = 0
@@ -98,9 +102,10 @@ class Genome():
         genes_list: list[int] = [x for x in self.genes]
         return self.fitness_fn(genes_list)
 
-    '''method = 'absolute' returns int number of different genes, method = 'relative' returns float ratio
-    (absolute distance / genome length)'''
     def distance(self, other: Genome, method: Literal['relative', 'absolute'] = 'relative') -> float | int:
+        """method = 'absolute' returns int number of different genes, method = 'relative' returns float ratio
+        (absolute distance / genome length)"""
+
         if len(self.genes) != len(other.genes):
             raise ValueError('Cannot evaluate distance between genomes of different length')
         differences = 0
