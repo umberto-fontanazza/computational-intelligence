@@ -127,7 +127,7 @@ class Genome():
         """Extract a chromosome from genome"""
         return Chromosome(self.genes, mask)
 
-    def apply_chromosome(self, mutation: Chromosome) -> Genome:
+    def assign_chromosome(self, mutation: Chromosome) -> Genome:
         """Returns a new Genome featuring the mutation Chromosome"""
 
         mutated_genes = tuple(mutation.genes[i] if mutation.mask[i] else gene for i, gene in enumerate(self.genes))
