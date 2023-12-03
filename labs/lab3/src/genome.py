@@ -1,5 +1,5 @@
 from __future__ import annotations
-from src.chromosome import Chromosome
+from src.chromosome import Chromosome, Mask
 from typing import Callable, Literal
 from dataclasses import dataclass
 from random import choice, choices, randint, shuffle
@@ -16,7 +16,7 @@ class Genome():
     def random(length: int, fitness_fn: Callable[[list[int]], float]) -> Genome:
         return Genome(tuple(gene for gene in choices([0, 1], k = length)), fitness_fn)
 
-    def combine_masked(self, other: Genome, mask: list[bool]) -> Genome:
+    def combine_masked(self, other: Genome, mask: Mask) -> Genome:
         """Self.genes marked by positive values of mask are applied to a copy of other"""
 
         child_genome = [gene if mask[i] else other.genes[i] for i, gene in enumerate(self.genes)]
@@ -53,7 +53,7 @@ class Genome():
         # random_with_chromosome = self.combine_masked(reference_random_genome, mask)
         # return random_with_chromosome.fitness - reference_random_genome.fitness
 
-    def chromosome_fitness_gain(self, mask: list[bool], random_genomes: list[Genome]) -> float:
+    def chromosome_fitness_gain(self, mask: Mask, random_genomes: list[Genome]) -> float:
         """Measure the gain of applying the chromosome identified by the mask to a pool of random genomes"""
 
         previous_average_fitness = sum([genome.fitness for genome in random_genomes]) / len(random_genomes)
@@ -123,7 +123,7 @@ class Genome():
         elif method == 'relative':
             return differences / len(self.genes)
 
-    def extract_chromosome(self, mask: tuple[bool, ...] | tuple[Literal[0,1], ...]) -> Chromosome:
+    def extract_chromosome(self, mask: Mask) -> Chromosome:
         """Extract a chromosome from genome"""
         return Chromosome(self.genes, mask)
 
