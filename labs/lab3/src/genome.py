@@ -1,4 +1,5 @@
 from __future__ import annotations
+from src.chromosome import Chromosome
 from typing import Callable, Literal
 from dataclasses import dataclass
 from random import choice, choices, randint, shuffle
@@ -8,6 +9,8 @@ from functools import cache
 class Genome():
     genes: tuple[int, ...]
     fitness_fn: Callable[[list[int]], float]
+
+    # TODO: chromosome rct
 
     @staticmethod
     def random(length: int, fitness_fn: Callable[[list[int]], float]) -> Genome:
@@ -119,3 +122,13 @@ class Genome():
             return differences
         elif method == 'relative':
             return differences / len(self.genes)
+
+    def extract_chromosome(self, mask: tuple[bool, ...] | tuple[Literal[0,1], ...]) -> Chromosome:
+        """Extract a chromosome from genome"""
+        return Chromosome(self.genes, mask)
+
+    def apply_chromosome(self, mutation: Chromosome) -> Genome:
+        """Returns a new Genome featuring the mutation Chromosome"""
+
+        mutated_genes = tuple(mutation.genes[i] if mutation.mask[i] else gene for i, gene in enumerate(self.genes))
+        return Genome(mutated_genes, self.fitness_fn)
