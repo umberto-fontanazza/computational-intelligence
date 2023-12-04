@@ -50,6 +50,10 @@ class Population:
         return Population(selection_pool[0: population_size])
 
     @property
+    def average_fitness(self) -> float:
+        return sum([genome.fitness for genome in self.genomes]) / len(self.genomes)
+
+    @property
     # @cache TODO: in order to use population must be hashable
     def best_genome(self) -> Genome:
         return max(self.genomes, key = lambda genome: genome.fitness)
