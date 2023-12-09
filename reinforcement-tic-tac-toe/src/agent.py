@@ -1,7 +1,7 @@
 from typing import Callable
 from src.state import State, Action, Quality
 from dataclasses import dataclass, field
-from random import shuffle
+from random import shuffle, random, choice
 from queue import LifoQueue
 
 𝛄 = .8
@@ -29,8 +29,10 @@ class Agent():
             new_q = (1 - α) * old_q + α * (reward + 𝛄 * q_expectation)
             self.q_table[state, action] = new_q
 
-    def move(self, state: State) -> Action:
+    def move(self, state: State, epsilon: float | None = None) -> Action:
         actions = state.actions
+        if epsilon and random() < epsilon:
+            return choice(actions)
         q: list[Quality] = [self.q_table[state, action] if (state, action) in self.q_table else q_initial for action in actions]
         actions_q: list[tuple[Action, Quality]] = list(zip(actions, q))
         shuffle(actions_q)
@@ -50,7 +52,7 @@ class Agent():
 
     @property
     def policy(self) -> Callable[[State], Action]:
-        return self.move
+        return lambda s: self.move(s)
 
     def reset(self):
         self.last_choice = None

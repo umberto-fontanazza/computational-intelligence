@@ -22,6 +22,8 @@ class State():
     @property
     @cache
     def winner(self) -> Literal['X', 'O', '_']:
+        """This method was written by https://bard.google.com/chat, and just tweaked by me on an attempt to test
+        Google's Gemini released on december 6th 2023, unfortunately Bard still makes a lot of mistakes"""
         # Check rows
         for row in self.board:
             if all(symbol == "X" for symbol in row):

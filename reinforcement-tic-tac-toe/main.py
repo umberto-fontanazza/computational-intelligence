@@ -52,7 +52,7 @@ def play_game(policy: Callable[[State], Action]):
 def main():
     a = Agent()
 
-    training_games = 50000
+    training_games = 10
     for i in range(training_games):
         state = State.initial()
         if i % 2 == 0:
@@ -71,7 +71,7 @@ def main():
                 break
 
             a.input(state, reward=0)
-            agent_move = a.move(state)
+            agent_move = a.move(state, epsilon=.1)
             state = state.apply(agent_move)
 
             if state.game_over():
