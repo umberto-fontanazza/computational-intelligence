@@ -4,7 +4,7 @@ from src.agent import Agent
 from src.state import State, Action
 from random import choice
 
-def policy(board: State) -> Action:
+def fixed_policy(board: State) -> Action:
     """A simple policy for making a move, aka non learning agent"""
 
     # Check if there's a winning move
@@ -21,27 +21,31 @@ def policy(board: State) -> Action:
     # If there's no move to win or block, make a random move
     return choice(board.actions)
 
-def play_game(policy: Callable[[State], Action]):
+def policy_ask_input(board: State) -> Action:
+    print(board, '\n')
+    for i, action in enumerate(board.actions):
+        print(f'Action {i}: {action}')
+    print()
+
+    move = -1
+    while move not in range(len(board.actions)):
+        move = int(input('Pick move: '))
+    return board.actions[move]
+
+
+def play_game(player_one_policy: Callable[[State], Action], player_two_policy: Callable[[State], Action]):
     s = State.initial()
 
     while(True):
-        s = s.apply(policy(s)) # policy plays
+        s = s.apply(player_one_policy(s)) # policy plays
 
         if s.game_over():
             print('Game over')
             print(s)
             break
 
-        for i, action in enumerate(s.actions):
-            print()
-            print(f' Action {i}: {action} ', end=None)
-        selected_action_i = -1
-        while(selected_action_i not in range(len(s.actions))):
-            print(s)
-            prompt = 'Select an action: '
-            selected_action_i : int = int(input(prompt))
-            selected_action = s.actions[selected_action_i]
-            s = s.apply(selected_action)
+        selected_action = player_two_policy(s)
+        s = s.apply(selected_action)
 
         if s.game_over():
             print('Game over')
@@ -52,11 +56,11 @@ def play_game(policy: Callable[[State], Action]):
 def main():
     a = Agent()
 
-    training_games = 10
+    training_games = 5000
     for i in range(training_games):
         state = State.initial()
         if i % 2 == 0:
-            policy_move = policy(state)
+            policy_move = fixed_policy(state)
             state = state.apply(policy_move)
 
         while(True): # game loop
@@ -66,7 +70,7 @@ def main():
                 elif state.winner == '_':
                     reward = 0
                 else:
-                    reward = -10
+                    reward = -20
                 a.input(None, reward)
                 break
 
@@ -76,10 +80,10 @@ def main():
 
             if state.game_over():
                 continue
-            policy_move = policy(state)
+            policy_move = fixed_policy(state)
             state = state.apply(policy_move)
 
-    play_game(a.policy)
+    play_game(a.policy, policy_ask_input)
 
 if __name__ == '__main__':
     main()
