@@ -55,4 +55,5 @@ class Agent():
         return lambda s: self.move(s)
 
     def reset(self):
+        self.pending_q_updates = LifoQueue()
         self.last_choice = None

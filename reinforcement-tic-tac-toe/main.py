@@ -1,8 +1,11 @@
-from typing import Callable
+from typing import Callable, Literal
 from dataclasses import replace
 from src.agent import Agent
 from src.state import State, Action
 from random import choice
+
+def random_move(board: State) -> Action:
+    return choice(board.actions)
 
 def fixed_policy(board: State) -> Action:
     """A simple policy for making a move, aka non learning agent"""
@@ -33,57 +36,72 @@ def policy_ask_input(board: State) -> Action:
     return board.actions[move]
 
 
-def play_game(player_one_policy: Callable[[State], Action], player_two_policy: Callable[[State], Action]):
-    s = State.initial()
+def play_game(learning_agent: Agent, opponent: Callable[[State], Action], agent_starts = True, training = False, debug = False) -> Literal['Win', 'Loss', 'Draw']:
+    """Agent wins = return value"""
+    state = State.initial()
+    agent = learning_agent
+    agent.reset()
+    epsilon = .1 if training else None
+
+    if not agent_starts:
+        state = state.apply(opponent(state))
 
     while(True):
-        s = s.apply(player_one_policy(s)) # policy plays
-
-        if s.game_over():
-            print('Game over')
-            print(s)
+        # agent turn
+        if state.game_over():
+            if debug:
+                print('\n','Game over:')
+                print(state)
+            if not training:
+                break
+            if state.winner == '_': # draw
+                agent.input(new_state = None, reward = 0)
+            else: # agent loss
+                agent.input(new_state = None, reward = -15)
             break
+        agent.input(state, reward = 0)
+        state = state.apply(agent.move(state, epsilon=epsilon))
 
-        selected_action = player_two_policy(s)
-        s = s.apply(selected_action)
-
-        if s.game_over():
-            print('Game over')
-            print(s)
+        # opponent turn
+        if state.game_over():
+            if debug:
+                print('\n', 'Game over:')
+                print(state)
+            if not training:
+                break
+            if state.winner == '_': # draw
+                agent.input(new_state = None, reward = 0)
+            else: # agent won
+                agent.input(new_state = None, reward = 15)
             break
+        state = state.apply(opponent(state))
+
+    if agent_starts and state.winner == 'X':
+        return 'Win'
+    elif state.winner == '_':
+        return 'Draw'
+    else:
+        return 'Loss'
 
 
 def main():
-    a = Agent()
+    agent = Agent()
 
-    training_games = 5000
-    for i in range(training_games):
-        state = State.initial()
-        if i % 2 == 0:
-            policy_move = fixed_policy(state)
-            state = state.apply(policy_move)
+    # train
+    for i in range(100000):
+        play_game(agent, fixed_policy, training = True)
 
-        while(True): # game loop
-            if state.game_over():
-                if state.winner == state.current_player:
-                    reward = 15
-                elif state.winner == '_':
-                    reward = 0
-                else:
-                    reward = -20
-                a.input(None, reward)
-                break
+    # test
+    test_games = 50
+    wins = losses = 0
+    for i in range(test_games):
+        outcome = play_game(agent, fixed_policy, debug = False)
+        if outcome == 'Win':
+            wins += 1
+        elif outcome == 'Loss':
+            losses += 1
 
-            a.input(state, reward=0)
-            agent_move = a.move(state, epsilon=.1)
-            state = state.apply(agent_move)
-
-            if state.game_over():
-                continue
-            policy_move = fixed_policy(state)
-            state = state.apply(policy_move)
-
-    play_game(a.policy, policy_ask_input)
+    print(f'Out of {test_games}, agent performed {wins} wins and {losses} losses.')
 
 if __name__ == '__main__':
     main()
