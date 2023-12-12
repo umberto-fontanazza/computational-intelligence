@@ -41,7 +41,7 @@ def play_game(learning_agent: Agent, opponent: Callable[[State], Action], agent_
     state = State.initial()
     agent = learning_agent
     agent.reset()
-    epsilon = .1 if training else None
+    epsilon = .05 if training else None
 
     if not agent_starts:
         state = state.apply(opponent(state))
@@ -86,16 +86,18 @@ def play_game(learning_agent: Agent, opponent: Callable[[State], Action], agent_
 
 def main():
     agent = Agent()
+    opponent = random_move
+    agent_starts = False
 
     # train
     for i in range(100000):
-        play_game(agent, fixed_policy, training = True)
+        play_game(agent, opponent, training = True, agent_starts=agent_starts)
 
     # test
     test_games = 50
     wins = losses = 0
     for i in range(test_games):
-        outcome = play_game(agent, fixed_policy, debug = False)
+        outcome = play_game(agent, opponent, debug = False, agent_starts=agent_starts)
         if outcome == 'Win':
             wins += 1
         elif outcome == 'Loss':

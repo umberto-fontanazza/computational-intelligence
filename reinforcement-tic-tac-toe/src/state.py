@@ -8,11 +8,7 @@ from functools import cache
 Action = tuple[int, int]
 Quality = float
 Symbol = Literal['O', 'X']
-Row = tuple[str, str, str]
-
-def all_map(iterable: Iterable[str], fn: Callable[[str], bool]) -> bool:
-    mapped = [fn(string) for string in iterable]
-    return all(mapped)
+Row = tuple[Symbol, Symbol, Symbol]
 
 @dataclass(frozen=True)
 class State():
@@ -81,7 +77,7 @@ class State():
         initial_board = (   ('_', '_', '_'),
                             ('_', '_', '_'),
                             ('_', '_', '_'))
-        return State(board = initial_board, current_player = 'X')
+        return State(board = initial_board, current_player = 'X') # type: ignore
 
     def __str__(self):
         rows = [' | '.join([' ' if s == '_' else s for s in r]) for r in self.board]

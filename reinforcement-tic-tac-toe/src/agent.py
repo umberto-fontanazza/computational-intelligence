@@ -18,10 +18,12 @@ class Agent():
         """Updates the q_table for a single game, starting from the end of the game and going back for a faster learning"""
         while(not self.pending_q_updates.empty()):
             state, action, reward, res_state = self.pending_q_updates.get()
+            # retreive old_q
             if (state, action) in self.q_table:
                 old_q = self.q_table[state, action]
             else:
                 old_q = 0
+            # compute future q
             if not res_state:
                 q_expectation = 0
             else:
