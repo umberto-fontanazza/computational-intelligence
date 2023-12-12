@@ -32,6 +32,8 @@ class Agent():
             self.q_table[state, action] = new_q
 
     def move(self, state: State, epsilon: float | None = None) -> Action:
+        """Epsilon is the chance to make a random move, otherwise the move with the best expected quality
+        is selected. If more actions have the same q a random choice is performed between the best qs."""
         actions = state.actions
         if epsilon and random() < epsilon:
             return choice(actions)

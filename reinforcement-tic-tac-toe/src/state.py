@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Literal, Callable
+from typing import Literal
 from dataclasses import dataclass
 from itertools import product
-from collections.abc import Iterable
 from functools import cache
 
+# type aliases
 Action = tuple[int, int]
-Quality = float
+Quality = float | int
 Symbol = Literal['O', 'X']
 Row = tuple[Symbol, Symbol, Symbol]
 
@@ -64,13 +64,15 @@ class State():
         return tuple(actions)
 
     def apply(self, action: Action) -> State:
+        """The returned state is the result of inserting the Symbol of the
+        current player in the cell of the board selected by action"""
         symbol = self.current_player
         row, col = action
         board_copy = [list(tup) for tup in self.board]
         board_copy[row][col] = symbol
         next_player: Symbol = 'O' if self.current_player == 'X' else 'X'
         result_board = tuple(tuple(lst) for lst in board_copy)
-        return State(board = result_board, current_player = next_player) # type: ignore Static type checker fails to detect length of tuple
+        return State(board = result_board, current_player = next_player) # type: ignore
 
     @staticmethod
     def initial() -> State:
