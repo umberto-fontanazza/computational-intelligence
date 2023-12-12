@@ -78,6 +78,8 @@ def play_game(learning_agent: Agent, opponent: Callable[[State], Action], agent_
 
     if agent_starts and state.winner == 'X':
         return 'Win'
+    if not agent_starts and state.winner == 'O':
+        return 'Win'
     elif state.winner == '_':
         return 'Draw'
     else:
@@ -86,7 +88,7 @@ def play_game(learning_agent: Agent, opponent: Callable[[State], Action], agent_
 
 def main():
     agent = Agent()
-    opponent = random_move
+    opponent = fixed_policy
     agent_starts = False
 
     # train
