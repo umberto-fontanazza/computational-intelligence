@@ -2,16 +2,18 @@ from typing import Callable
 from src.state import State, Action, Quality
 from dataclasses import dataclass, field
 from random import shuffle, random, choice
-from queue import LifoQueue
+from queue import LifoQueue, Queue
 
 𝛄 = .8
 α = .5
 q_initial = 0
 
+type training_entry = tuple[State, Action, Quality, State | None]
+
 @dataclass()
 class Agent():
     q_table : dict[tuple[State, Action], Quality] = field(default_factory = dict)
-    pending_q_updates: LifoQueue[tuple[State, Action, Quality, State | None]] = LifoQueue() # Sₜ, Aₜ, Rₜ, Sₜ₊₁
+    pending_q_updates: LifoQueue[training_entry] | Queue[training_entry] = LifoQueue() # Sₜ, Aₜ, Rₜ, Sₜ₊₁
     last_choice: tuple[State, Action] | None = None
 
     def update_q_table(self) -> None:
