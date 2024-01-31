@@ -1,0 +1,3 @@
+[submodule "quixo"]
+	path = quixo
+	url = https://github.com/umberto-fontanazza/quixo
